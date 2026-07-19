@@ -1,5 +1,8 @@
 # 🏛️ Civic AI Complaint Agent
 
+### 💡 Civic AI in a Nutshell
+Instead of a basic web form that just dumps data into a static database, Civic AI acts as an automated, intelligent city triage system. It takes messy, unstructured public complaints from citizens and runs them through a stateful AI pipeline to automatically filter out malicious inputs, route the issue to the correct city department, dynamically escalate the priority if there is matching severe weather, and draft a formal municipal report.
+
 A production-ready, stateful AI agent built with **LangGraph.js** and **Groq** designed to process, classify, and escalate public civic complaints automatically. This application uses a state graph architecture to validate input security, route complaints to the correct municipal departments, and dynamically escalate priorities based on real-time environmental contexts.
 
 ## 🚀 Core Architecture & Features
