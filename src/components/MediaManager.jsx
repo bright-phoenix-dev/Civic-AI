@@ -66,9 +66,16 @@ export default function MediaManager({ onMediaCaptured, className }) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
       
-      // Set canvas dimensions to match video stream
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      // Set canvas dimensions to max 800 width
+      const maxWidth = 800;
+      let width = video.videoWidth;
+      let height = video.videoHeight;
+      if (width > maxWidth) {
+        height = Math.floor(height * (maxWidth / width));
+        width = maxWidth;
+      }
+      canvas.width = width;
+      canvas.height = height;
       
       // Draw video frame to canvas
       const ctx = canvas.getContext('2d');
@@ -93,8 +100,26 @@ export default function MediaManager({ onMediaCaptured, className }) {
       
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result);
-        if (onMediaCaptured) onMediaCaptured(reader.result);
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxWidth = 800;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height = Math.floor(height * (maxWidth / width));
+            width = maxWidth;
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          setPreview(compressedDataUrl);
+          if (onMediaCaptured) onMediaCaptured(compressedDataUrl);
+        };
+        img.src = reader.result;
       };
       reader.readAsDataURL(file);
     }
