@@ -23,7 +23,7 @@ async function complaint_classifier(state = {}) {
   const apiKey = process.env.GROQ_API_KEY;
   const llm = new ChatGroq({
     apiKey,
-    modelName: "llama-3.3-70b-versatile",
+    model: "llama-3.3-70b-versatile",
     temperature: 0.1,
   });
 
@@ -52,7 +52,7 @@ async function document_generator(state = {}) {
   const apiKey = process.env.GROQ_API_KEY;
   const llm = new ChatGroq({
     apiKey,
-    modelName: "llama-3.3-70b-versatile",
+    model: "llama-3.3-70b-versatile",
     temperature: 0.1,
   });
 
