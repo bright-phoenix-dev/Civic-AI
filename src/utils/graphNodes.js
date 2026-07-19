@@ -29,6 +29,9 @@ export async function environmental_enricher(state = {}) {
   if (cat === "Water Leak" && (weather.includes("rain") || weather.includes("storm"))) {
     priority = "Critical";
     logMessage = "[Priority Evaluated (Escalated)]";
+  } else if (cat === "Pothole" && (weather.includes("rain") || weather.includes("storm") || weather.includes("flood"))) {
+    priority = "Critical";
+    logMessage = "[Priority Evaluated (Escalated: Weather + Road Hazard)]";
   } else if (cat === "Streetlight" && weather.includes("fog")) {
     priority = "High";
     logMessage = "[Priority Evaluated (Escalated)]";
