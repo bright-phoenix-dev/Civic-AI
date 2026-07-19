@@ -1,5 +1,5 @@
-export async function security_guardrail(state) {
-  const text = state.description || "";
+export async function security_guardrail(state = {}) {
+  const text = state?.description || "";
   // Case-insensitive validation for prompt injection
   const injectionPatterns = [
     /ignore previous/i,
@@ -19,10 +19,10 @@ export async function security_guardrail(state) {
   };
 }
 
-export async function environmental_enricher(state) {
-  let priority = state.priority || "Medium";
-  const cat = state.category || "";
-  const weather = state.weather?.toLowerCase() || "";
+export async function environmental_enricher(state = {}) {
+  let priority = state?.priority || "Medium";
+  const cat = state?.category || "";
+  const weather = state?.weather?.toLowerCase() || "";
   let logMessage = "[Priority Evaluated]";
 
   // Evaluates the category alongside active weather context.

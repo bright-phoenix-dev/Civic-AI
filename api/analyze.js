@@ -19,7 +19,7 @@ const GraphState = Annotation.Root({
   }),
 });
 
-async function complaint_classifier(state) {
+async function complaint_classifier(state = {}) {
   const apiKey = process.env.GROQ_API_KEY;
   const llm = new ChatGroq({
     apiKey,
@@ -37,7 +37,7 @@ async function complaint_classifier(state) {
   
   const response = await llmWithStructuredOutput.invoke([
     new SystemMessage(systemPrompt),
-    new HumanMessage(`User Issue Description: ${state.description}`)
+    new HumanMessage(`User Issue Description: ${state?.description || ""}`)
   ]);
 
   return {
@@ -48,7 +48,7 @@ async function complaint_classifier(state) {
   };
 }
 
-async function document_generator(state) {
+async function document_generator(state = {}) {
   const apiKey = process.env.GROQ_API_KEY;
   const llm = new ChatGroq({
     apiKey,
@@ -57,10 +57,10 @@ async function document_generator(state) {
   });
 
   const prompt = `Draft a highly professional, structured formal complaint letter ready for city submission based on the following:
-  Issue: ${state.description}
-  Category: ${state.category}
-  Department: ${state.department}
-  Priority: ${state.priority}
+  Issue: ${state?.description || ""}
+  Category: ${state?.category || ""}
+  Department: ${state?.department || ""}
+  Priority: ${state?.priority || ""}
   
   Output ONLY the formal letter text. Do not include introductory text.`;
 
@@ -72,14 +72,14 @@ async function document_generator(state) {
   };
 }
 
-async function error_handler(state) {
+async function error_handler(state = {}) {
   return {
     execution_path: [] // The security node already logs the error message
   };
 }
 
-function routeAfterSecurity(state) {
-  if (state.is_safe === false) {
+function routeAfterSecurity(state = {}) {
+  if (state?.is_safe === false) {
     return "error_handler";
   }
   return "complaint_classifier";
@@ -132,7 +132,15 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Server configuration error: GROQ_API_KEY is missing.' });
     }
 
-    const { context, weather } = req.body;
+    let parsedBody = req.body || {};
+    if (typeof req.body === 'string') {
+      try {
+        parsedBody = JSON.parse(req.body);
+      } catch (e) {
+        parsedBody = {};
+      }
+    }
+    const { context, weather } = parsedBody;
     if (!context || typeof context !== 'string') {
       return res.status(400).json({ error: 'Invalid payload: context string is required.' });
     }
