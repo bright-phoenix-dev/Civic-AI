@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../components/ui/Card';
 import { analyzeIssue } from '../services/groqService';
+import MediaManager from '../components/MediaManager';
 
 const WORKFLOW_STEPS = [
   { id: 1, title: 'Security Guardrail', icon: ShieldCheck },
@@ -159,6 +160,11 @@ export default function CitizenPortal() {
                   className="resize-none focus:ring-municipal-indigo bg-slate-50 border-slate-200 text-slate-800 w-full"
                 />
               </div>
+
+              <MediaManager 
+                onMediaCaptured={(data) => console.log(data ? 'Media captured' : 'Media cleared')} 
+                className="w-full"
+              />
 
               <div className="space-y-2 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
                 <Label htmlFor="weather" className="font-semibold text-indigo-900 text-sm">Simulate Local Weather Context</Label>
